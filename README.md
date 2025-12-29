@@ -1,4 +1,4 @@
---// Serviços
+--// ServiÃ§os
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -26,7 +26,7 @@ local OpenBall = Instance.new("TextButton")
 OpenBall.Size = UDim2.new(0, 24, 0, 24)
 OpenBall.Position = UDim2.new(0.5, -12, 0.35, 0)
 OpenBall.BackgroundColor3 = Color3.new(1,1,1)
-OpenBall.BackgroundTransparency = 0.98
+OpenBall.BackgroundTransparency = 0.97
 OpenBall.Text = ""
 OpenBall.ZIndex = 50
 OpenBall.Parent = ScreenGui
@@ -50,12 +50,12 @@ TopBar.BackgroundTransparency = 1
 TopBar.Parent = Hub
 TopBar.ZIndex = 61
 
---// Título
+--// TÃ­tulo
 local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -40, 1, 0)
 Title.Position = UDim2.new(0, 10, 0, 0)
 Title.BackgroundTransparency = 1
-Title.Text = "Kayz hub"
+Title.Text = "Stretch Hub"
 Title.TextColor3 = Color3.new(1,1,1)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 16
@@ -148,7 +148,7 @@ ApplyFov.MouseButton1Click:Connect(function()
 	end
 end)
 
---// Stretch CORRIGIDO (segue a câmera)
+--// Stretch CORRIGIDO (segue a cÃ¢mera)
 ApplyStretch.MouseButton1Click:Connect(function()
 	local v = tonumber(StretchInput.Text)
 	if v and v >= 0 and v <= 1 then
