@@ -1,0 +1,202 @@
+--// Serviços
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+
+local Player = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+--// ENV
+getgenv().Resolution = {
+	[".gg/scripters"] = 0.85
+}
+
+--// Controle
+local stretchConnection
+
+--// ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "CleanStretchHub"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = Player:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+--// Bolinha
+local OpenBall = Instance.new("TextButton")
+OpenBall.Size = UDim2.new(0, 24, 0, 24)
+OpenBall.Position = UDim2.new(0.5, -12, 0.35, 0)
+OpenBall.BackgroundColor3 = Color3.new(1,1,1)
+OpenBall.BackgroundTransparency = 0.98
+OpenBall.Text = ""
+OpenBall.ZIndex = 50
+OpenBall.Parent = ScreenGui
+Instance.new("UICorner", OpenBall).CornerRadius = UDim.new(1,0)
+
+--// HUB
+local Hub = Instance.new("Frame")
+Hub.Size = UDim2.new(0, 300, 0, 260)
+Hub.Position = UDim2.new(0.5, -150, 0.45, 0)
+Hub.BackgroundColor3 = Color3.fromRGB(25,25,25)
+Hub.Visible = false
+Hub.ZIndex = 60
+Hub.Parent = ScreenGui
+Hub.BorderSizePixel = 0
+Instance.new("UICorner", Hub).CornerRadius = UDim.new(0,12)
+
+--// TopBar (arrastar)
+local TopBar = Instance.new("Frame")
+TopBar.Size = UDim2.new(1, 0, 0, 40)
+TopBar.BackgroundTransparency = 1
+TopBar.Parent = Hub
+TopBar.ZIndex = 61
+
+--// Título
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -40, 1, 0)
+Title.Position = UDim2.new(0, 10, 0, 0)
+Title.BackgroundTransparency = 1
+Title.Text = "Kayz hub"
+Title.TextColor3 = Color3.new(1,1,1)
+Title.Font = Enum.Font.GothamBold
+Title.TextSize = 16
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = TopBar
+
+--// X
+local Close = Instance.new("TextButton")
+Close.Size = UDim2.new(0, 30, 0, 30)
+Close.Position = UDim2.new(1, -35, 0, 5)
+Close.Text = "X"
+Close.BackgroundColor3 = Color3.fromRGB(180,60,60)
+Close.TextColor3 = Color3.new(1,1,1)
+Close.Font = Enum.Font.GothamBold
+Close.TextSize = 14
+Close.ZIndex = 62
+Close.Parent = Hub
+Instance.new("UICorner", Close).CornerRadius = UDim.new(1,0)
+
+--// Scroll
+local Scroll = Instance.new("ScrollingFrame")
+Scroll.Size = UDim2.new(1, -20, 1, -60)
+Scroll.Position = UDim2.new(0, 10, 0, 50)
+Scroll.CanvasSize = UDim2.new(0,0,0,260)
+Scroll.ScrollBarImageTransparency = 0.4
+Scroll.BackgroundTransparency = 1
+Scroll.Parent = Hub
+
+--// FOV
+local FovInput = Instance.new("TextBox")
+FovInput.Size = UDim2.new(1, 0, 0, 35)
+FovInput.BackgroundColor3 = Color3.fromRGB(35,35,35)
+FovInput.PlaceholderText = "FOV (1 - 120)"
+FovInput.TextColor3 = Color3.new(1,1,1)
+FovInput.Font = Enum.Font.Gotham
+FovInput.TextSize = 14
+FovInput.ClearTextOnFocus = false
+FovInput.Parent = Scroll
+Instance.new("UICorner", FovInput)
+
+local ApplyFov = Instance.new("TextButton")
+ApplyFov.Size = UDim2.new(1, 0, 0, 35)
+ApplyFov.Position = UDim2.new(0, 0, 0, 45)
+ApplyFov.Text = "Aplicar FOV"
+ApplyFov.BackgroundColor3 = Color3.fromRGB(60,120,200)
+ApplyFov.TextColor3 = Color3.new(1,1,1)
+ApplyFov.Font = Enum.Font.GothamBold
+ApplyFov.TextSize = 14
+ApplyFov.Parent = Scroll
+Instance.new("UICorner", ApplyFov)
+
+--// Stretch
+local StretchInput = Instance.new("TextBox")
+StretchInput.Size = UDim2.new(1, 0, 0, 35)
+StretchInput.Position = UDim2.new(0, 0, 0, 105)
+StretchInput.BackgroundColor3 = Color3.fromRGB(35,35,35)
+StretchInput.PlaceholderText = "Stretch (0.00 - 1.00)"
+StretchInput.Text = tostring(getgenv().Resolution[".gg/scripters"])
+StretchInput.TextColor3 = Color3.new(1,1,1)
+StretchInput.Font = Enum.Font.Gotham
+StretchInput.TextSize = 14
+StretchInput.ClearTextOnFocus = false
+StretchInput.Parent = Scroll
+Instance.new("UICorner", StretchInput)
+
+local ApplyStretch = Instance.new("TextButton")
+ApplyStretch.Size = UDim2.new(1, 0, 0, 35)
+ApplyStretch.Position = UDim2.new(0, 0, 0, 150)
+ApplyStretch.Text = "Aplicar Esticar Tela"
+ApplyStretch.BackgroundColor3 = Color3.fromRGB(80,80,80)
+ApplyStretch.TextColor3 = Color3.new(1,1,1)
+ApplyStretch.Font = Enum.Font.GothamBold
+ApplyStretch.TextSize = 14
+ApplyStretch.Parent = Scroll
+Instance.new("UICorner", ApplyStretch)
+
+--// Eventos
+OpenBall.MouseButton1Click:Connect(function()
+	Hub.Visible = not Hub.Visible
+end)
+
+Close.MouseButton1Click:Connect(function()
+	Hub.Visible = false
+end)
+
+ApplyFov.MouseButton1Click:Connect(function()
+	local v = tonumber(FovInput.Text)
+	if v and v >= 1 and v <= 120 then
+		Camera.FieldOfView = v
+	end
+end)
+
+--// Stretch CORRIGIDO (segue a câmera)
+ApplyStretch.MouseButton1Click:Connect(function()
+	local v = tonumber(StretchInput.Text)
+	if v and v >= 0 and v <= 1 then
+		getgenv().Resolution[".gg/scripters"] = v
+
+		if stretchConnection then
+			stretchConnection:Disconnect()
+		end
+
+		stretchConnection = RunService.RenderStepped:Connect(function()
+			local cf = Camera.CFrame
+			Camera.CFrame =
+				CFrame.new(cf.Position, cf.Position + cf.LookVector)
+				* CFrame.new(
+					0, 0, 0,
+					1, 0, 0,
+					0, v, 0,
+					0, 0, 1
+				)
+		end)
+	end
+end)
+
+--// Arrastar HUB
+local dragging, dragStart, startPos
+
+TopBar.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = true
+		dragStart = input.Position
+		startPos = Hub.Position
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		local delta = input.Position - dragStart
+		Hub.Position = UDim2.new(
+			startPos.X.Scale,
+			startPos.X.Offset + delta.X,
+			startPos.Y.Scale,
+			startPos.Y.Offset + delta.Y
+		)
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		dragging = false
+	end
+end)
